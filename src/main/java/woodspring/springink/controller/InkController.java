@@ -16,11 +16,19 @@ public class InkController {
 	@Autowired
 	YellowService yellowService;
 	
-	@GetMapping(value = "/eventbus")
+	@GetMapping(value = "/eventbus")	
     public String eventBus() {
 
         return eventBus.doMessageSendReceive();
     }
+
+	@GetMapping(value = "/newspublish")	
+    public String newsPublish() {
+
+        return eventBus.doNewsPublishRead();
+    }
+
+	
 	@GetMapping(value = "/statistics")
     public String statistics() {
 

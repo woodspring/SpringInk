@@ -8,5 +8,6 @@ import woodspring.springink.EventBus.Subscribable;
 public interface Reader<E> {
 	E onEvent(Event<E> event);
 	Set<Reader> supports();
+	E getData();
 
 }
