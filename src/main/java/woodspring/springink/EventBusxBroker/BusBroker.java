@@ -14,24 +14,26 @@ import woodspring.springink.EventBusAsynchN2M.NewsEventBus;
 public class BusBroker  {
 	private final static Logger logger = LoggerFactory.getLogger(BusBroker.class);
 	
-	private NewsEventBus newsBus = null;
-	private Throttler throttler = null;
+	private static NewsEventBus noticeBus = null;
+	private static Throttler throttler = null;
 	private String busNo;
-	private Queue<NewsEvent> eventQueue;
+	private static Queue<NewsEvent> eventQueue;
 	public BusBroker(String busId) {
 		this.busNo = busId;
-		newsBus = NewsEventBus.EVENTBUS();
+		noticeBus = NewsEventBus.EVENTBUS();
 		throttler = Throttler.THROTTLER();
 		eventQueue = new LinkedList<>();
 	}
 	
-	public Boolean onEvent() {
+	public Boolean onRetry() {
 		// callback funtion from Throttler
 		Boolean bRet = true;
 		logger.info("BusBroker {}, get a call, queue size:{}", busNo, eventQueue.size());
 		while( !eventQueue.isEmpty()) {
 			if ( publish(eventQueue.peek())) {
-				eventQueue.poll();
+				synchronized (throttler) {
+					eventQueue.poll();
+				}
 			} else {
 				bRet = false;
 				break;
@@ -47,7 +49,7 @@ public class BusBroker  {
 			eventQueue.add(news);	
 			bRet = false;
 		} else {
-			newsBus.publish( news);
+			noticeBus.publish( news);
 			throttler.release();
 		}		
 		return bRet;

@@ -85,7 +85,7 @@ public class Throttler {
 		lock.lock();
 		try {
 			
-			List<CompletableFuture<Boolean>> cfbList = notOkList.stream().map( item -> CompletableFuture.supplyAsync( () -> item.onEvent()))
+			List<CompletableFuture<Boolean>> cfbList = notOkList.stream().map( item -> CompletableFuture.supplyAsync( () -> item.onRetry()))
 										.collect(Collectors.toList());
 			List<Boolean> boolList = cfbList.stream().map(CompletableFuture::join)
 										.collect( Collectors.toList());

@@ -6,12 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import woodspring.springink.service.BlueService;
+import woodspring.springink.service.RedService;
 import woodspring.springink.service.YellowService;
 
 @RestController
 public class InkController {
 	@Autowired
 	BlueService eventBus;
+	
+	@Autowired
+	RedService redService;
 	
 	@Autowired
 	YellowService yellowService;
@@ -28,6 +32,12 @@ public class InkController {
         return eventBus.doNewsPublishRead();
     }
 
+	
+	@GetMapping(value = "/buswiththrottler")
+    public String busWithThrottler() {
+
+        return redService.eventBusWithThrottler();
+    }
 	
 	@GetMapping(value = "/statistics")
     public String statistics() {

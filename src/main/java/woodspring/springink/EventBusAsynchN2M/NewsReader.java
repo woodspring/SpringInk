@@ -22,8 +22,7 @@ public class NewsReader implements Reader<String>{
 		readerName = name;
 		newsBus = NewsEventBus.EVENTBUS();
 		newsBus.addSubscriberForFilteredEvents(readerName, this, eventType);
-	}
-	
+	}	
 
 	@Override
 	public String onEvent(Event<String> event) {
