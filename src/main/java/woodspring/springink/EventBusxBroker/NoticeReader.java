@@ -30,7 +30,7 @@ public class NoticeReader implements Reader<String>{
 	@Override
 	public String onEvent(Event<String> event) {
 		String retStr = "NoticeReader " + readerName+" "+ aInt.getAndIncrement()+" notification:"+ event.getData();
-		logger.info("{} read notification:{} -{}-",readerName, retStr, aInt );
+		logger.info("******************READER {} get notification:{} -{}-",readerName, retStr, aInt );
 		strB.append( retStr);
 		return retStr;
 	}

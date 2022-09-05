@@ -53,6 +53,7 @@ public class NotificationEventBus implements EventBus< NewsEvent, NoticeReader>{
 	@Override
 	public void publishEvent(EventType eventType, NewsEvent event) {
 		// filter if Client get filter
+		logger.info("eventType:{}, event:{}, readers size:{}", eventType, event.getData(), readers.size());
 		if ( filterMap.containsKey( eventType)) {
 			List<NoticeReader> filterList = filterMap.get( eventType);
 			logger.info("readers size:{}", readers.size());
@@ -73,7 +74,7 @@ public class NotificationEventBus implements EventBus< NewsEvent, NoticeReader>{
 	@Override
 	public void publish(NewsEvent event) {
 		// without topic; means publish to all Client;
-		logger.info("readers size:{}, publish event:{}", readers.size(), event.getData());
+		logger.info("noticeReaderMap size:{}                        readers size:{}, publish event:{}", noticeReaderMap.size(), readers.size(), event.getData());
 		List<CompletableFuture<Object>> comFList = readers.stream().map( reader ->  
 							CompletableFuture.supplyAsync(() -> reader.onEvent(event)))
 		.collect( Collectors.toList());	

@@ -55,7 +55,7 @@ public class NewsEventBus implements EventBus< NewsEvent, NewsReader>{
 		// filter if Client get filter
 		if ( filterMap.containsKey( eventType)) {
 			List<NewsReader> filterList = filterMap.get( eventType);
-			logger.info("readers size:{}", readers.size());
+			logger.info("newsReaderMap size:{}  readers size:{} eventType:{}, event:{}", newsReaderMap.size(), readers.size(), eventType, event.msgData);
 			readers.stream().filter( item -> !filterList.contains( item))
 						.map(reader -> 
 							CompletableFuture.supplyAsync(() -> reader.onEvent( event)))
@@ -105,6 +105,6 @@ public class NewsEventBus implements EventBus< NewsEvent, NewsReader>{
 		newsReaderMap.computeIfAbsent(name,v -> new ArrayList<>()).add( reader);
 		filterMap.computeIfAbsent(eventType, v -> new ArrayList<>()).add( reader);	
 		if (!readers.contains( reader))  readers.add( reader ); 
-		logger.info("addSubscriberForFilteredEvents readers size:{}, name:{} readerName:{} eventType:{}", readers.size(), name, reader.toString(), eventType);
+		logger.info("addSubscriberForFilteredEvents readers size:{}, name:{} readerName:{} eventType:{}", readers.size(), name, reader.getName(), eventType);
 	}	
 }

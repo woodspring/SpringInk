@@ -21,11 +21,12 @@ public class RedService {
 	public RedService() {}
 	
 	public String eventBusWithThrottler( ) {
+		logger.info("RedService::eventBusWithThrottler ");
 		StringBuffer strB = new StringBuffer();
 		List<Notification> noticerList = new ArrayList<>();		
 		List<String> singleList = new ArrayList<>();
-		singleList.add("Galaxies  ---- ");singleList.add("Andromeda Galaxy");singleList.add("Magellanic Clouds  ---- ");singleList.add("Whirlpool Galaxy");
-		singleList.add(" Sombrero Galaxy ");singleList.add("NGC 3992");singleList.add("PGC 37617  ---- ");singleList.add("LEDA 37617");
+		singleList.add("Galaxies Galaxies Galaxies");singleList.add("Andromeda Galaxy");singleList.add("Magellanic Clouds");singleList.add("Whirlpool Galaxy");
+		singleList.add(" Sombrero Galaxy ");singleList.add("NGC 3992");singleList.add("PGC 37617 ");singleList.add("LEDA 37617");
 		singleList.add(" Large Magellanic Cloud ");singleList.add("Small Magellanic Cloud,");singleList.add("Triangulum Galaxy.");singleList.add("small cloud");
 		singleList.add(" Great Andromeda Nebula ");singleList.add("ellipticals");singleList.add("spirals ");singleList.add(" irregulars ");
 		singleList.add(" starburst galaxies ");singleList.add(" active galaxies ");singleList.add("type-cD galaxies ");singleList.add("supergiant elliptical galaxies");
@@ -46,7 +47,9 @@ public class RedService {
 		
 		String firstSignle = " Start to Notice all of you";
 		noticeList.stream().forEach(unit -> unit.publish( firstSignle));
-
+		
+		int loopTime = 12;
+for ( int ind =0; ind < loopTime; ind++) {
 		noticeList.stream().map( 
 				 unit -> CompletableFuture.supplyAsync(() -> unit.publishMessages( singleList))
 				 )
@@ -55,6 +58,22 @@ public class RedService {
 				.forEach( item -> strB.append( item));
 		readers.stream().forEach( reader -> strB.append( reader.getData()));
 		
+		
+		logger.info("RedService::eventBusWithThrottler ind:{} toString:{}", ind, strB.toString());
+		
+//		try {
+//			if ( (ind % 10) == 0) {
+//				logger.info(" =================================================================================================================going to sleep 5 seconds");
+//			
+//			//Thread.sleep( 5000);
+//			}
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} finally {
+//			logger.info(" =================Finally wake up ========================going to sleep 5 seconds");
+//		}
+}		
 		return strB.toString();
 	}
 
