@@ -47,11 +47,20 @@ public class Notification implements Publisher {
 
 	@Override
 	public String publishMessages(List<String> strList) {
-		var strB = new StringBuffer();
+		StringBuffer strB = new StringBuffer();
+		try {
+		logger.info(" ===============================going to sleep 2 seconds");
+		Thread.sleep(50 );
+		} catch (InterruptedException e) {		// TODO Auto-generated catch block
+				e.printStackTrace();
+		} finally {
+			logger.info(" =================Finally wake up ===================");
+		}
 		strList.stream().map( str -> CompletableFuture.supplyAsync(() -> this.publish( str)))
 						.collect(Collectors.collectingAndThen(
 								Collectors.toList(), 
-								cfList -> cfList.stream().map(CompletableFuture::join)))
+								cfList -> cfList.stream()
+										.map(CompletableFuture::join)))
 						.forEach(item -> strB.append( item));
 		return strB.toString();
 	}

@@ -27,15 +27,17 @@ public class BusBroker  {
 		logger.info("BusBroker, busNO:{}, throttler time:{}", busNo, throttler.getStartTime());
 	}
 	
-	public Boolean onRetry() {
+	public Boolean onRetry(int numOfEvent) {
 		// callback funtion from Throttler
 		Boolean bRet = true;
+		int reTrySuccess =0;
 		logger.info("onRetry BusBroker {}, get a call, queue size:{}", busNo, eventQueue.size());
 		while( !eventQueue.isEmpty()) {
 			if ( publish(eventQueue.peek())) {
 				//synchronized (throttler) {
 					eventQueue.poll();
 					throttler.release();
+					reTrySuccess++;
 					logger.info("onRetry BusBroker {},    poll sucess, eventQueue, size:{}", 
 							busNo, eventQueue.size()); 
 				//}
@@ -44,10 +46,13 @@ public class BusBroker  {
 				logger.info("onRetry false BusBroker {},    poll sucess, eventQueue, size:{}", 
 						busNo, eventQueue.size()); 
 				break;
-			}			
+			}
+			if ( !(reTrySuccess < numOfEvent)) break; 
 		}		
 		return bRet;
 	}
+	
+
 	public boolean publish( NewsEvent news) {
 		boolean bRet = true;
 		logger.info("--->BusBroker {}, publish news:{} ", busNo, news.getData());
@@ -62,6 +67,10 @@ public class BusBroker  {
 			logger.info("<--- OK, BusBroker {}, publish news:{} ", busNo, news.getData());
 		}		
 		return bRet;
+	}
+	
+	public int numInQueue() {
+		return eventQueue.size();
 	}
 
 }
